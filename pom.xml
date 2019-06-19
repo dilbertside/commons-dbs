@@ -131,10 +131,10 @@
   </dependencies>
   <repositories>
     <!-- to add if it is not already in your settings.xml, cf https://github.com/dilbertside/bom/blob/master/resources/settings.xml-->
-    <!-- <repository>
+    <repository>
       <id>jitpack.io</id>
       <url>https://jitpack.io</url>
-    </repository> -->
+    </repository>
   </repositories>
   <build>
     <defaultGoal>clean sortpom:sort install help:active-profiles</defaultGoal>
