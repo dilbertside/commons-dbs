@@ -8,8 +8,10 @@ import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.dbs.lib.security.SecurityUtils;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class UserDto {
 
   @NotNull
-  //@Pattern(regexp = SecurityUtils.LOGIN_REGEX)
+  @Pattern(regexp = SecurityUtils.LOGIN_REGEX)
   @Size(min = 1, max = 50)
   private String login;
 
@@ -39,7 +41,7 @@ public class UserDto {
   @Size(min = 5, max = 100)
   private String email;
 
-  private boolean activated = false;
+  private Boolean activated = false;
   
   @Size(min = 5, max = 40)
   private String password;
@@ -55,7 +57,34 @@ public class UserDto {
   @Valid
   private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-
+  /**
+   * 
+   * @param login user
+   */
+  public UserDto(String login) {
+    this.login = login;
+  }
+  
+  /**
+   * 
+   * @param login to set
+   * @param firstName to set
+   * @param lastName to set
+   * @param email to set
+   * @param activated to set
+   * @param langKey to set
+   * @param company to set
+   */
+  public UserDto(String login, String firstName, String lastName, String email, boolean activated, String langKey, String company) {
+    this.login = login;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.activated = activated;
+    this.langKey = langKey;
+    this.company = company;
+  }
+  
   /**
    * 
    * @param login to set
@@ -82,8 +111,9 @@ public class UserDto {
   }
 
   @JsonAnySetter
-  public void setAdditionalProperty(String name, Object value) {
+  public UserDto setAdditionalProperty(String name, Object value) {
     this.additionalProperties.put(name, value);
+    return this;
   }
 
   @JsonIgnore
