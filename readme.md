@@ -44,16 +44,15 @@ Modify in your ~/.m2/settings.xml along those lines, or download following templ
 
 [Maven Settings Reference](https://maven.apache.org/settings.html#Repositories)
 
-#### Parent:
+#### dependency to add to project:
 
 
 ```xml
-  <parent>
+  <dependency>
     <groupId>com.github.dilbertside</groupId>
     <artifactId>commons-dbs</artifactId>
-    <version>1.0.0</version>
-    <relativePath></relativePath>
-  </parent>
+    <version>1.0.3</version>
+  </dependency>
 ```
 
 # License
