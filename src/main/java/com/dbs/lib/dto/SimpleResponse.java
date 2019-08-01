@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  * @since 0.1.10
  * @version 1.0
  * @version 1.1 add {@link #additionalProperties}
+ * @version 1.2 introduce parameter and {@link #setSuccess()}
  *
  */
 @lombok.Data
@@ -34,7 +35,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @lombok.NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(content = Include.NON_NULL, value = Include.NON_NULL)
-public class SimpleResponse implements Serializable {
+public class SimpleResponse<T> implements Serializable {
 
   private static final long serialVersionUID = 2495651389927343478L;
 
@@ -57,6 +58,8 @@ public class SimpleResponse implements Serializable {
   @JsonProperty("msg")
   String message;
   
+  T data;
+  
   @JsonIgnore
   @Valid
   private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -65,7 +68,7 @@ public class SimpleResponse implements Serializable {
    * clone SimpleResponse
    * @param response {@link SimpleResponse}
    */
-  public SimpleResponse(SimpleResponse response) {
+  public SimpleResponse(SimpleResponse<T> response) {
     this.errorId = response.errorId;
     this.message = response.message;
   }
@@ -103,10 +106,21 @@ public class SimpleResponse implements Serializable {
    * @return SimpleResponse for convenience chaining
    */
   @JsonIgnore
-  public SimpleResponse setError(ErrorCode errorId, String message) {
+  public SimpleResponse<T> setError(ErrorCode errorId, String message) {
     this.errorId = errorId;
     this.success = errorId == ErrorCode.success ? true : false;
     this.message = message;
+    return this;
+  }
+  
+  /**
+   * reset {@link #errorId} and {@link #success} to success 
+   * @return {@link SimpleResponse} for convenience chaining
+   */
+  @JsonIgnore
+  public SimpleResponse<T> setSuccess() {
+    this.errorId = ErrorCode.success;
+    this.success = true;
     return this;
   }
   
@@ -116,7 +130,7 @@ public class SimpleResponse implements Serializable {
    * @return SimpleResponse for convenience chaining
    */
   @JsonIgnore
-  public SimpleResponse update(SimpleResponse toClone) {
+  public SimpleResponse<T> update(SimpleResponse<T> toClone) {
     setError(toClone.errorId, toClone.message);
     if (toClone.success) {
       this.success = toClone.success; 

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -28,10 +28,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @lombok.Data
 @lombok.AllArgsConstructor
 @lombok.NoArgsConstructor
-public class SimpleRequest {
+public class SimpleRequest<T> {
 
-  @Size(min = 1)
-  String value;
+  @NotNull
+  T value;
 
   @JsonIgnore
   @Valid

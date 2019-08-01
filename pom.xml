@@ -8,7 +8,7 @@
     <relativePath />
   </parent>
   <artifactId>commons-dbs</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <packaging>jar</packaging>
   <name>commons-dbs-library</name>
   <description>Miscellaneous utilities, functions used oten in projects based on Spring Framework and Spring Boot</description>
