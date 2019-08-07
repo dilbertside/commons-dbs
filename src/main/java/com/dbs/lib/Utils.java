@@ -3,6 +3,7 @@
  */
 package com.dbs.lib;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -21,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Locale.LanguageRange;
+import java.util.Properties;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -31,6 +33,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.lang.Nullable;
 
 /**
@@ -38,6 +41,7 @@ import org.springframework.lang.Nullable;
  * @since 1.0.0
  * @version 1.0
  * @version 1.1 remove reference to Guava as it is in use by commons DTO and @Nullable
+ * @version 1.2 add {@link #loadApplicationPropertiesKey(String, String, String)}
  *
  */
 @lombok.experimental.UtilityClass
@@ -503,5 +507,28 @@ public class Utils {
     int exp = (int) (Math.log(bytes) / Math.log(unit));
     String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
     return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+  }
+  
+  /**
+   * Searches for the property with the specified key in a property file. If
+   * the key is not found in this property file, the default property list, and
+   * its defaults, recursively, are then checked. The method returns the default
+   * value argument if the property is not found.
+   * 
+   * @param propFile     properties file located in classpath
+   * @param key          the hashtable key.
+   * @param defaultValue a default value.
+   * @return {@link Collection} of values
+   */
+  public static Collection<String> loadApplicationPropertiesKey(String propFile, String key, String defaultValue) {
+    String value;
+    final Properties properties = new Properties();
+    try (final InputStream stream = new ClassPathResource(propFile).getInputStream()) {
+      properties.load(stream);
+      value = properties.getProperty(key, defaultValue);
+    } catch (Exception e) {
+      value = defaultValue;
+    }
+    return Arrays.asList(value.split(","));
   }
 }

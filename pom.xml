@@ -4,11 +4,11 @@
   <parent>
     <groupId>com.github.dilbertside</groupId>
     <artifactId>bom</artifactId>
-    <version>5.1.15</version>
+    <version>5.1.17</version>
     <relativePath />
   </parent>
   <artifactId>commons-dbs</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <packaging>jar</packaging>
   <name>commons-dbs-library</name>
   <description>Miscellaneous utilities, functions used oten in projects based on Spring Framework and Spring Boot</description>
