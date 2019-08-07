@@ -11,6 +11,8 @@ import java.io.Serializable;
  * @version 1.1 add {@link #code}
  *
  */
+@lombok.Data
+@lombok.RequiredArgsConstructor
 public class ProblemFieldError implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -41,30 +43,8 @@ public class ProblemFieldError implements Serializable {
    * @param message to set
    * @param codes to set
    */
-  public ProblemFieldError(String dto, String field, String message, String[] codes) {
-    this.objectName = dto;
-    this.field = field;
-    this.message = message;
-    this.code = (codes != null && codes.length > 0 ? codes[codes.length - 1] : null);
-  }
-
-  public String getObjectName() {
-    return objectName;
-  }
-
-  public String getField() {
-    return field;
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  /**
-   * @return the code
-   */
-  public String getCode() {
-    return code;
+  public ProblemFieldError(String objectName, String field, String message, String[] codes) {
+    this(objectName, field, message, (codes != null && codes.length > 0 ? codes[codes.length - 1] : null));
   }
 
 }
