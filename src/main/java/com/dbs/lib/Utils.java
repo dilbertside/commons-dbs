@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Locale.LanguageRange;
 import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -42,6 +44,7 @@ import org.springframework.lang.Nullable;
  * @version 1.0
  * @version 1.1 remove reference to Guava as it is in use by commons DTO and @Nullable
  * @version 1.2 add {@link #loadApplicationPropertiesKey(String, String, String)}
+ * @version 1.3 add {@link #sequence(List)}
  *
  */
 @lombok.experimental.UtilityClass
@@ -530,5 +533,19 @@ public class Utils {
       value = defaultValue;
     }
     return Arrays.asList(value.split(","));
+  }
+  
+  /**
+   * rewrite with {@link List} because {@link CompletableFuture} allOf take [] as constructor
+   * <br> see question stackoverflow 30025428
+   * 
+   * @see java.util.concurrent.CompletableFuture#allOf(CompletableFuture...)
+   * @param list of {@link CompletableFuture}
+   * @return a new CompletableFuture that is completed when all of the
+   * given CompletableFutures complete
+   */
+  public static <T> CompletableFuture<List<T>> sequence(List<CompletableFuture<T>> list) {
+    return CompletableFuture.allOf(list.toArray(new CompletableFuture<?>[list.size()]))
+        .thenApply(v -> list.stream().map(CompletableFuture::join).collect(Collectors.toList()));
   }
 }
