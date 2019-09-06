@@ -51,7 +51,7 @@ Modify in your ~/.m2/settings.xml along those lines, or download following templ
   <dependency>
     <groupId>com.github.dilbertside</groupId>
     <artifactId>commons-dbs</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.8</version>
   </dependency>
 ```
 
