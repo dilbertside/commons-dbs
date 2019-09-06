@@ -25,7 +25,6 @@ import java.util.Locale.LanguageRange;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -45,6 +44,7 @@ import org.springframework.lang.Nullable;
  * @version 1.1 remove reference to Guava as it is in use by commons DTO and @Nullable
  * @version 1.2 add {@link #loadApplicationPropertiesKey(String, String, String)}
  * @version 1.3 add {@link #sequence(List)}
+ * @version 1.4 add {@link #removeAllCrLf(String)}
  *
  */
 @lombok.experimental.UtilityClass
@@ -116,6 +116,7 @@ public class Utils {
    * @param dates list
    * @return max date
    */
+  @Nullable
   public static Date maxDate(Date... dates) {
     if (null == dates) {
       return null;
@@ -145,6 +146,7 @@ public class Utils {
    * @param dates list
    * @return min date
    */
+  @Nullable
   public static Date minDate(Date... dates) {
     if (null == dates) {
       return null;
@@ -264,8 +266,8 @@ public class Utils {
   }
 
   /**
-   * replace All Non Alphanumeric in a string
-   * 
+   * replace All Non Alphanumeric in a string<br>
+   * pattern:  [^\\p{L}\\p{Nd}]+
    * @param toClean
    *          string to process
    * @param replacement
@@ -331,7 +333,7 @@ public class Utils {
    * @return cleaned string
    */
   public static final String removeNonNumeric(final String toClean) {
-    return removeNonNumeric(toClean, "");
+    return replaceNonNumeric(toClean, "");
   }
 
   /**
@@ -339,13 +341,37 @@ public class Utils {
    * @param replacement to set
    * @return cleaned string
    */
-  public static final String removeNonNumeric(final String toClean, String replacement) {
+  public static final String replaceNonNumeric(final String toClean, String replacement) {
     if (StringUtils.isNotBlank(toClean) && null != replacement) {
       return toClean.replaceAll("\\D+", replacement).trim();
     }
     return toClean;
   }
 
+  /**
+   * remove all CR LF in a string 
+   * see {@link #replaceAllCrLf(String, String)}l
+   * @param toClean string
+   * @return cleaned string
+   */
+  public static final String removeAllCrLf(final String toClean) {
+    return replaceAllCrLf(toClean, null);
+  }
+  
+  /**
+   * used to address CRLF Injection logs<br>
+   * pattern: [\\u000A\\u000B\\u000C\\u000D\\u0085\\u2028\\u2029]+
+   * @param toClean string
+   * @param replacement to replace with, if null act as {@link #removeAllCrLf(String)}
+   * @return cleaned string
+   */
+  public static final String replaceAllCrLf(final String toClean, @Nullable String replacement) {
+    if (StringUtils.isNotEmpty(toClean)) {
+      return Defaults.patternCrLf.matcher(toClean).replaceAll(replacement == null ? "" : replacement);
+    }
+    return toClean;
+  }
+  
   /**
    * check if a mobile phone number is valid for indonesia
    * 
@@ -357,7 +383,7 @@ public class Utils {
     if (StringUtils.isBlank(phone)) {
       return false;
     }
-    return Defaults.PATTERN_MOBILE_INDO.matcher(phone).find();
+    return Defaults.patternMobileIndo.matcher(phone).find();
   }
 
   /**

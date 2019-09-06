@@ -46,6 +46,7 @@ import javax.persistence.metamodel.EntityType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.PropertyAccessor;
 import org.springframework.beans.PropertyAccessorFactory;
+import org.springframework.lang.Nullable;
 
 
 /**
@@ -187,6 +188,7 @@ public abstract class JpaUtils {
 	 * @param queryString JQL query 
 	 * @return alias of root entity.
 	 */
+	@Nullable
 	public static String getAlias(String queryString) {
 		Matcher m = ALIAS_PATTERN.matcher(queryString);
 		return m.find() ? m.group(1) : null;
@@ -222,6 +224,7 @@ public abstract class JpaUtils {
 	 * @param name primary key name
 	 * @return query string 
 	 */
+	@Nullable
 	public static String getKeyQuery(String queryString, String name) {
 		Matcher m = FROM_PATTERN.matcher(queryString);
 		if (m.find()) {
@@ -450,19 +453,21 @@ public abstract class JpaUtils {
 				annotations = ((Method) member).getAnnotations();
 			}
 			
-			for (Annotation a : annotations) {
-				if (a.annotationType().equals(OneToMany.class)) {
-					mappedBy = ((OneToMany) a).mappedBy();
-					break;
-				}
-				else if (a.annotationType().equals(ManyToMany.class)) {
-					mappedBy = ((ManyToMany) a).mappedBy();
-					break;
-				}
-				else if (a.annotationType().equals(OneToOne.class)) {
-					mappedBy = ((OneToOne) a).mappedBy();
-					break;
-				}
+			if (null != annotations) {
+			  for (Annotation a : annotations) {
+			    if (a.annotationType().equals(OneToMany.class)) {
+			      mappedBy = ((OneToMany) a).mappedBy();
+			      break;
+			    }
+			    else if (a.annotationType().equals(ManyToMany.class)) {
+			      mappedBy = ((ManyToMany) a).mappedBy();
+			      break;
+			    }
+			    else if (a.annotationType().equals(OneToOne.class)) {
+			      mappedBy = ((OneToOne) a).mappedBy();
+			      break;
+			    }
+			  }
 			}
 		}
 		

@@ -13,7 +13,8 @@ import org.springframework.http.MediaType;
  * @author dbs on Aug 21, 2016 3:10:28 PM
  * @since 1.0.0
  * @version 1.0
- * @version add static from ConstantsDto
+ * @version 1.1 add static from ConstantsDto
+ * @version 1.2 add {@link #patternCrLf}
  *
  */
 @lombok.experimental.UtilityClass
@@ -37,6 +38,30 @@ public class Defaults {
 
   public static Pattern patternStrictNumeric;
 
+  /**
+   * this pattern will detect any non characters not allowed except apha-numeric and . - _ and space
+   */
+  public static final Pattern patternInvalidCharacter;
+  
+  /**
+   * this pattern will detect any non characters not allowed except apha-numeric and . - _ space ( ) { } [ ]
+   */
+  public static final Pattern patternInvalidCharacterExtended;
+  
+  public static final String REGEX_MOBILE_INDO = "^(((0|((\\+)?62([- ])?))|((\\((\\+)?62\\)([- ])?)))?[8-9]\\d{7,12})?$";
+  /**
+   * alternative is to use google phone library
+   */
+  public static final Pattern patternMobileIndo;
+  
+  /**
+   * Linebreak matcher Any Unicode linebreak CR FL sequence, \u000D\u000A|[\u000A\u000B\u000C\u000D\u0085\u2028\u2029] 
+   */
+  public static final String PATTERN_CR_LF = "[\\u000A\\u000B\\u000C\\u000D\\u0085\\u2028\\u2029]+";
+  
+  public static final Pattern patternCrLf;
+  
+
   public static final String DATE_PATTERN_DDMMYYYY = "ddMMyyyy";
 
   public static final String DATE_PATTERN_YYYYMMDD = "yyyyMMdd";
@@ -51,6 +76,17 @@ public class Defaults {
   public static final DateTimeFormatter DATE_FORMATTER_DDMMYYYY;
 
   public static final DateTimeFormatter DATE_FORMATTER_YYYYMMDD;
+
+  public static final String DATE_PATTERN_PARTNER = "yyyy-MM-dd'T'HH:mm:ssZ";
+  
+  public static final DateTimeFormatter DATE_FORMATTER_PARTNER;
+  
+  /**
+   * ISO-8601 format {@code uuuu-MM-dd}.
+   */
+  public static final String DATE_ISO_8601 = " uuuu-MM-dd";
+  
+  public static final DateTimeFormatter DATE_ISO_8601_FORMATTER;
   
   /**
    * {@link #DATE_PATTERN_BSS_BILLING}
@@ -81,49 +117,36 @@ public class Defaults {
     patternWhitespaceMany = Pattern.compile("\\s+");
 
     patternStrictNumeric = Pattern.compile("[^\\d]");
-
+    
+    patternInvalidCharacter = Pattern.compile("[^\\w\\- \\.]+");
+    
+    patternInvalidCharacterExtended = Pattern.compile("[^\\w\\- \\.\\(\\)\\{\\}\\[\\]]+");
+    
+    patternMobileIndo = Pattern.compile(REGEX_MOBILE_INDO);
+    
+    patternCrLf = Pattern.compile(PATTERN_CR_LF);
+    
     DATE_FORMATTER_DDMMYYYY = DateTimeFormatter.ofPattern(DATE_PATTERN_DDMMYYYY);
 
     DATE_FORMATTER_YYYYMMDD = DateTimeFormatter.ofPattern(DATE_PATTERN_YYYYMMDD);
     
     DATE_FORMATTER_BSS_BILLING = DateTimeFormatter.ofPattern(DATE_PATTERN_BSS_BILLING);
+    
+    DATE_FORMATTER_PARTNER = DateTimeFormatter.ofPattern(DATE_PATTERN_PARTNER);
+    
+    DATE_ISO_8601_FORMATTER = DateTimeFormatter.ofPattern(DATE_ISO_8601);
   }
 
-  /**
-   * this pattern will detect any non characters not allowed except apha-numeric and . - _ and space
-   */
-  public static final Pattern NODE_INVALID_CHARACTER = Pattern.compile("[^\\w\\- \\.]+");
-
-  /**
-   * this pattern will detect any non characters not allowed except apha-numeric and . - _ space ( ) { } [ ]
-   */
-  public static final Pattern NODE_INVALID_CHARACTER_EXTENDED = Pattern.compile("[^\\w\\- \\.\\(\\)\\{\\}\\[\\]]+");
 
   /**
    * default suffix reply queue msg to add for non request/reply pattern communication
    */
   public static final String JMS_QUEUE_REPLY_SUFFIX = "-reply";
 
-  public static final String REGEX_MOBILE_INDO = "^(((0|((\\+)?62([- ])?))|((\\((\\+)?62\\)([- ])?)))?[8-9]\\d{7,12})?$";
-
-  /**
-   * alternative is to use google phone library
-   */
-  public static final Pattern PATTERN_MOBILE_INDO = Pattern.compile(REGEX_MOBILE_INDO);
 
   // Regex for acceptable logins
   public static final String LOGIN_REGEX = "^[_'.@A-Za-z0-9-]*$";
 
-  public static final String DATE_PATTERN_PARTNER = "yyyy-MM-dd'T'HH:mm:ssZ";
-
-  public static final DateTimeFormatter DATE_FORMATTER_PARTNER = DateTimeFormatter.ofPattern(DATE_PATTERN_PARTNER);
-  
-  /**
-   * ISO-8601 format {@code uuuu-MM-dd}.
-   */
-  public static final String DATE_ISO_8601 = " uuuu-MM-dd";
-
-  public static final DateTimeFormatter DATE_ISO_8601_FORMATTER = DateTimeFormatter.ofPattern(DATE_ISO_8601);
   
   /**
    * application/csp-report;charset=UTF-8

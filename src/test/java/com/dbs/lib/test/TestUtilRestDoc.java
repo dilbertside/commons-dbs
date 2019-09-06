@@ -6,9 +6,11 @@ package com.dbs.lib.test;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.snippet.Attributes.key;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -19,6 +21,9 @@ import com.dbs.lib.dto.NetworkTestResponse;
 import com.dbs.lib.dto.SimpleRequest;
 import com.dbs.lib.dto.SimpleResponse;
 import com.dbs.lib.dto.UserDto;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.base.Joiner;
 
 /**
@@ -29,9 +34,11 @@ import com.google.common.base.Joiner;
  */
 public class TestUtilRestDoc {
 
-  public static FieldDescriptor[] problemFields, simpleRequestFields, simpleRespFields, defaultFields, networkTestRequestFields, networkTestResponseFields
-                                  , userRequestFields, userReqFields, userRespFields;
+  public static FieldDescriptor[] problemFields, simpleRequestFields, simpleRespFields, simpleRespFieldsWithData, defaultFields, networkTestRequestFields, networkTestResponseFields
+                                  , userRequestFields, userReqFields, userRespFields, userRespDataFields;
   public static FieldDescriptor dateTime;
+  
+  static ConstraintDescriptions simpleResponseConstraints;
   
   public static class DefaultProblemEx extends AbstractThrowableProblem {
     private static final long serialVersionUID = 1L;
@@ -100,7 +107,7 @@ public class TestUtilRestDoc {
           .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(networkTestResponseConstraints.descriptionsForProperty("dateTime"))));
       networkTestResponseFields = ArrayUtils.addAll(networkTestResponseFields, dateTime);
     
-    ConstraintDescriptions simpleResponseConstraints = new ConstraintDescriptions(SimpleResponse.class);
+    simpleResponseConstraints = new ConstraintDescriptions(SimpleResponse.class);
     
     simpleRespFields = new FieldDescriptor[] { 
       fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("true for success, false otherwise")
@@ -110,6 +117,17 @@ public class TestUtilRestDoc {
       fieldWithPath("msg").type(JsonFieldType.STRING).description("error/success message").optional()
         .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(simpleResponseConstraints.descriptionsForProperty("message")))), 
     };
+    
+    simpleRespFieldsWithData = new FieldDescriptor[] { 
+        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("true for success, false otherwise")
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(simpleResponseConstraints.descriptionsForProperty("success")))), 
+        fieldWithPath("eid").type(JsonFieldType.NUMBER).description("error ID, success is 0")
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(simpleResponseConstraints.descriptionsForProperty("errorId")))), 
+        fieldWithPath("msg").type(JsonFieldType.STRING).description("error/success message").optional()
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(simpleResponseConstraints.descriptionsForProperty("message")))), 
+        fieldWithPath("data").type(JsonFieldType.OBJECT).description("data payload").optional()
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(simpleResponseConstraints.descriptionsForProperty("data")))), 
+      };
     
     ConstraintDescriptions simpleRequestConstraints = new ConstraintDescriptions(SimpleRequest.class);
     simpleRequestFields = new FieldDescriptor[] {
@@ -163,6 +181,27 @@ public class TestUtilRestDoc {
         .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(userDtoConstraints.descriptionsForProperty("authorities")))), 
     };
     
+    userRespDataFields = new FieldDescriptor[] {
+        fieldWithPath("data.login").type(JsonFieldType.STRING).description("user id or login")
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(userDtoConstraints.descriptionsForProperty("login")))), 
+        fieldWithPath("data.firstName").type(JsonFieldType.STRING).description("first Name")
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(userDtoConstraints.descriptionsForProperty("firstName")))), 
+        fieldWithPath("data.lastName").type(JsonFieldType.STRING).description("last Name")
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(userDtoConstraints.descriptionsForProperty("lastName")))), 
+        fieldWithPath("data.email").type(JsonFieldType.STRING).description("email")
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(userDtoConstraints.descriptionsForProperty("email")))), 
+        fieldWithPath("data.activated").type(JsonFieldType.BOOLEAN).description("true to activate").optional()
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(userDtoConstraints.descriptionsForProperty("activated")))), 
+        fieldWithPath("data.password").type(JsonFieldType.STRING).description("password").optional()
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(userDtoConstraints.descriptionsForProperty("password")))),
+        fieldWithPath("data.langKey").type(JsonFieldType.STRING).description("langKey")
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(userDtoConstraints.descriptionsForProperty("langKey")))),
+          fieldWithPath("data.company").type(JsonFieldType.STRING).description("Company")
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(userDtoConstraints.descriptionsForProperty("company")))),
+        fieldWithPath("data.authorities").type(JsonFieldType.ARRAY).description("role user").optional()
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(userDtoConstraints.descriptionsForProperty("authorities")))), 
+      };
+    
     userReqFields = new FieldDescriptor[] {
       fieldWithPath("login").type(JsonFieldType.STRING).description("user id or login")
         .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(userDtoConstraints.descriptionsForProperty("login")))), 
@@ -170,18 +209,46 @@ public class TestUtilRestDoc {
         .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(userDtoConstraints.descriptionsForProperty("password")))),
     };
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
   }//
+
+  private static final ObjectMapper mapper = createObjectMapper();
+  
+  /** MediaType for JSON UTF8 */
+  public static final MediaType APPLICATION_JSON_UTF8 = MediaType.APPLICATION_JSON_UTF8;
+  
+  private static ObjectMapper createObjectMapper() {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+    mapper.registerModule(new JavaTimeModule());
+    return mapper;
+  }
+  
+  /**
+   * Convert an object to JSON byte array.
+   *
+   * @param object the object to convert.
+   * @return the JSON byte array.
+   * @throws IOException
+   */
+  public static byte[] convertObjectToJsonBytes(Object object) throws IOException {
+    return mapper.writeValueAsBytes(object);
+  }
+
+  /**
+   * reset {@link FieldDescriptor} for {@link SimpleResponse} data parameterized property
+   * @param fieldType {@link JsonFieldType}
+   * @param description to document
+   * @param optional true if optional field
+   * @return new {@value #simpleRespFieldsWithData} with data field redefined
+   */
+  public static FieldDescriptor[] replaceSimpleRespFieldsData(JsonFieldType fieldType, String description, boolean optional) {
+    FieldDescriptor fd = fieldWithPath("data").type(fieldType).description(description)
+    .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(simpleResponseConstraints.descriptionsForProperty("data"))));
+    if (optional)
+      fd = fd.optional();
+    FieldDescriptor[]  respFieldsWithData = ArrayUtils.clone(simpleRespFieldsWithData); 
+    respFieldsWithData = ArrayUtils.remove(respFieldsWithData, respFieldsWithData.length - 1);
+    respFieldsWithData = ArrayUtils.add(respFieldsWithData, fd);
+    return respFieldsWithData;
+  }
 }

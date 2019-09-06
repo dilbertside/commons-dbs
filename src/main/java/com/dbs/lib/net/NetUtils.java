@@ -19,6 +19,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.lang.Nullable;
 
 import com.dbs.lib.Utils;
 import com.dbs.lib.exception.PingException;
@@ -89,6 +90,7 @@ public class NetUtils {
    * get Host address which try to detect non docker interfaces
    * @return Host Address
    */
+  @Nullable
   public static String getHostAddress() {
     String result = null;
     Enumeration<NetworkInterface> interfaces = null;

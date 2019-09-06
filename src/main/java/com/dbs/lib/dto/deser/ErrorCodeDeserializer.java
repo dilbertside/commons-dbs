@@ -9,7 +9,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.dbs.lib.dto.enumeration.ErrorCode;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -25,7 +24,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 public class ErrorCodeDeserializer extends JsonDeserializer<ErrorCode> {
 
   @Override
-  public ErrorCode deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+  public ErrorCode deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
     JsonToken t = jp.getCurrentToken();
     if (t == JsonToken.VALUE_NULL) {
       return ErrorCode.none;

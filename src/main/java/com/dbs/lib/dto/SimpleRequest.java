@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @author dbs
  * @since 0.0.18
  * @version 1.0
+ * @version 1.1 change property name from value to {@link #data}
  *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -30,8 +31,11 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @lombok.NoArgsConstructor
 public class SimpleRequest<T> {
 
+  /**
+   * payload request
+   */
   @NotNull
-  T value;
+  T data;
 
   @JsonIgnore
   @Valid

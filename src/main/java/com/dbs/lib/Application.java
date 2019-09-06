@@ -27,7 +27,7 @@ import com.dbs.lib.net.NetUtils;
  */
 public class Application /*extends SpringBootServletInitializer*/ {
 
-  public static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  protected static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   protected static void showAppInfo(final Environment env) throws UnknownHostException {
     String isSslEnabled = env.getProperty("server.ssl.enabled");
