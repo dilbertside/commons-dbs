@@ -28,7 +28,7 @@ public enum ErrorCode  implements Iterable<String>, Comparator<ErrorCode> {
   /**
    * 10 generic error, a detailed erro must be provided
    */
-  error(10, "generic error", "a detailed erro must be provided", HttpStatus.INTERNAL_SERVER_ERROR),
+  error(10, "generic error", "a detailed error must be provided", HttpStatus.INTERNAL_SERVER_ERROR),
   /**
    * 30 Format error, message format received not conform to specification
    */

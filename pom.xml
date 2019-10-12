@@ -4,11 +4,11 @@
   <parent>
     <groupId>com.github.dilbertside</groupId>
     <artifactId>bom</artifactId>
-    <version>5.1.22</version>
+    <version>5.1.23</version>
     <relativePath />
   </parent>
   <artifactId>commons-dbs</artifactId>
-  <version>1.0.10-SNAPSHOT</version>
+  <version>1.0.10</version>
   <packaging>jar</packaging>
   <name>commons-dbs-library</name>
   <description>Miscellaneous utilities, functions used oten in projects based on Spring Framework and Spring Boot</description>
@@ -43,6 +43,14 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
       <scope>provided</scope>
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.github.dilbertside</groupId>
+      <artifactId>bom</artifactId>
+      <version>5.1.23</version>
+      <type>zip</type>
+      <classifier>resources</classifier>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
@@ -176,7 +184,12 @@
         <groupId>com.github.ekryd.sortpom</groupId>
         <artifactId>sortpom-maven-plugin</artifactId>
       </plugin>
-      <!-- <plugin>
+      <!-- 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+      <plugin>
         to run: mvn verify
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
@@ -188,6 +201,10 @@
           <source>${java.version}</source>
           <target>${java.version}</target>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

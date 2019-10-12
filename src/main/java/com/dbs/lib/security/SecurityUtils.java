@@ -5,6 +5,7 @@ package com.dbs.lib.security;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -215,5 +216,17 @@ public class SecurityUtils {
       }
     }
     return false;
+  }
+  
+  /**
+   * Get the JWT of the current user.
+   *
+   * @return the JWT of the current user.
+   */
+  public static Optional<String> getCurrentUserJWT() {
+      SecurityContext securityContext = SecurityContextHolder.getContext();
+      return Optional.ofNullable(securityContext.getAuthentication())
+          .filter(authentication -> authentication.getCredentials() instanceof String)
+          .map(authentication -> (String) authentication.getCredentials());
   }
 }
