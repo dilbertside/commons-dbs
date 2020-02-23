@@ -19,7 +19,7 @@ This library has some hard dependencies with
 
 #### Minimum version
 
-Maven 3.5.x https://maven.apache.org/
+Maven 3.6.x https://maven.apache.org/
 
 Java 1.8
 
@@ -51,7 +51,7 @@ Modify in your ~/.m2/settings.xml along those lines, or download following templ
   <dependency>
     <groupId>com.github.dilbertside</groupId>
     <artifactId>commons-dbs</artifactId>
-    <version>1.0.10</version>
+    <version>1.0.11</version>
   </dependency>
 ```
 
