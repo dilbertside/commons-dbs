@@ -1,5 +1,5 @@
 /**
- * 
+ * Wrapper
  */
 package com.dbs.lib.dto;
 
@@ -11,6 +11,7 @@ package com.dbs.lib.dto;
  * @version 1.0
  */
 @lombok.Data
+@lombok.AllArgsConstructor
 public class Wrapper<T> {
 
   T object;

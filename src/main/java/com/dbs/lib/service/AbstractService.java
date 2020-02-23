@@ -3,10 +3,15 @@
  */
 package com.dbs.lib.service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import static java.lang.String.format;
 
 import javax.annotation.Nullable;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +104,33 @@ public class AbstractService<T> {
   }
   
   /**
+   * build a concatenated string from the service paramaterized object to validate
+   * @param toValidate T
+   * @param objectDescription  human readable object description
+   * @param separator separator to use between each error
+   * @return pair of boolean key true if it has errors, and value empty string if no errors
+   */
+  public  <T> void  validate(T toValidate) throws ConstraintViolationException {
+    BindingResult bindingResult = validateEntity(toValidate);
+    if (bindingResult.hasErrors()) {
+      Set<ConstraintViolation<T>> constraintViolations = new HashSet<ConstraintViolation<T>>();
+      for (ObjectError objectError : bindingResult.getAllErrors()) {
+        if (objectError instanceof FieldError) {
+          FieldError fe = (FieldError) objectError;
+          ConstraintViolation<T> cv = new ConstraintViolationImpl<T>(fe);
+          constraintViolations.add(cv);
+        } else {
+          // TODO
+        }
+      }
+      for (ConstraintViolation<?> constraintViolation : constraintViolations) {
+        
+      }
+      throw new ConstraintViolationException(String.format("Failed validation for %s", toValidate), constraintViolations );
+    }
+  }
+  
+  /**
    * build a concatenated string from a binding result list of errors
    * 
    * @param objectDescription human readable object description
@@ -127,10 +159,10 @@ public class AbstractService<T> {
       for (ObjectError objectError : bindingResult.getAllErrors()) {
         if (objectError instanceof FieldError) {
           FieldError fe = (FieldError) objectError;
-          errors.add(format("Object (%s) for property [%s] with value [%s] failed with validation error %s\n", objectDescription, fe.getField(),
+          errors.add(format("Object (%s) for property [%s] with value [%s] failed with validation error %s%n", objectDescription, fe.getField(),
               fe.getRejectedValue(), objectError.getDefaultMessage()));
         } else {
-          errors.add(format("Object (%s) for property [%s] failed with validation error [%s]\n", objectDescription, objectError.getObjectName(),
+          errors.add(format("Object (%s) for property [%s] failed with validation error [%s]%n", objectDescription, objectError.getObjectName(),
               objectError.getDefaultMessage()));
         }
       }
@@ -182,7 +214,7 @@ public class AbstractService<T> {
   /**
    * @author dbs on May 22, 2014 8:29:07 PM
    * @version 1.0
-   * @since V1.1.18
+   * @since V1.0.0
    *
    */
   public interface CustomValidationHandler {

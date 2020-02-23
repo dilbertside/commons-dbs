@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 import org.apache.commons.lang3.RegExUtils;
@@ -131,5 +132,21 @@ public class UtilsTest {
     
     String str3 = "\r\n1\r\n2\r\n3\r\n4\r\n5\r\n6\r\n7\r\n8\r\n9\r\n";
     assertTrue(Utils.removeAllCrLf(str3).equals("123456789"), "must be valid");
+  }
+  
+  @Test
+  @DisplayName("parse 2019-11-19T21:11:37.83")
+  public void testLocalDateTimeDate() {
+    String date = "2019-11-19T21:11:37.83";
+    LocalDateTime ldt = Utils.toLocalDateTime(Defaults.DATE_TIME_NANO_FORMATTER, date);
+    assertNotNull(ldt);
+    
+    date = "2019-12-05T09:24:22.5";
+    ldt = Utils.toLocalDateTime(Defaults.DATE_TIME_NANO_FORMATTER, date);
+    assertNotNull(ldt);
+    
+    date = "2019-12-05T09:24:22.5345";
+    ldt = Utils.toLocalDateTime(Defaults.DATE_TIME_NANO_FORMATTER, date);
+    assertNotNull(ldt);
   }
 }

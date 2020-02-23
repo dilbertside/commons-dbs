@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.dbs.lib.dto.deser.ErrorCodeDeserializer;
 import com.dbs.lib.dto.enumeration.ErrorCode;
@@ -47,6 +48,7 @@ public class SimpleResponse<T> implements Serializable {
    * success is 0
    * error ID
    */
+  @NotNull
   @JsonProperty("eid")
   @JsonDeserialize(using = ErrorCodeDeserializer.class)
   ErrorCode errorId = ErrorCode.success;
@@ -54,7 +56,7 @@ public class SimpleResponse<T> implements Serializable {
   /**
    * error/success message
    */
-  @NotNull
+  @Size(min = 0, max = 512)
   @JsonProperty("msg")
   String message;
   

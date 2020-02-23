@@ -79,7 +79,11 @@ public class Defaults {
 
   public static final String DATE_PATTERN_PARTNER = "yyyy-MM-dd'T'HH:mm:ssZ";
   
+  public static final String DATE_TIME_NANO_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.n";
+  
   public static final DateTimeFormatter DATE_FORMATTER_PARTNER;
+  
+  public static final DateTimeFormatter DATE_TIME_NANO_FORMATTER;
   
   /**
    * ISO-8601 format {@code uuuu-MM-dd}.
@@ -131,6 +135,8 @@ public class Defaults {
     DATE_FORMATTER_YYYYMMDD = DateTimeFormatter.ofPattern(DATE_PATTERN_YYYYMMDD);
     
     DATE_FORMATTER_BSS_BILLING = DateTimeFormatter.ofPattern(DATE_PATTERN_BSS_BILLING);
+    
+    DATE_TIME_NANO_FORMATTER = DateTimeFormatter.ofPattern(DATE_TIME_NANO_PATTERN);
     
     DATE_FORMATTER_PARTNER = DateTimeFormatter.ofPattern(DATE_PATTERN_PARTNER);
     

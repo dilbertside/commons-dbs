@@ -4,11 +4,11 @@
   <parent>
     <groupId>com.github.dilbertside</groupId>
     <artifactId>bom</artifactId>
-    <version>5.1.23</version>
+    <version>5.1.28</version>
     <relativePath />
   </parent>
   <artifactId>commons-dbs</artifactId>
-  <version>1.0.10</version>
+  <version>1.0.11</version>
   <packaging>jar</packaging>
   <name>commons-dbs-library</name>
   <description>Miscellaneous utilities, functions used oten in projects based on Spring Framework and Spring Boot</description>
@@ -153,6 +153,11 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-commons</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.restdocs</groupId>
       <artifactId>spring-restdocs-mockmvc</artifactId>
       <scope>test</scope>
@@ -161,6 +166,11 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-core</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcpkix-jdk15on</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>

@@ -490,7 +490,7 @@ public class Utils {
       return "";
     }
     ZonedDateTime zdt = ZonedDateTime.ofInstant(ref.toInstant(), ZoneId.of("UTC"));
-    return Defaults.DATE_FORMATTER_PARTNER.format(zdt);
+    return Defaults.DATE_TIME_NANO_FORMATTER.format(zdt);
   }
   
   /**
