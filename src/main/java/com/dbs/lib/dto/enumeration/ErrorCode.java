@@ -20,11 +20,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ErrorCode  implements Iterable<String>, Comparator<ErrorCode> {
   
-  none(-1, "none", "error code not set", HttpStatus.INTERNAL_SERVER_ERROR),
+  none(-1, "none", "error code not set", HttpStatus.NOT_IMPLEMENTED),
   /**
    * 0 Success
    */
-  success(0, "Success", "Success", HttpStatus.INTERNAL_SERVER_ERROR),
+  success(0, "Success", "Success", HttpStatus.OK),
   /**
    * 10 generic error, a detailed erro must be provided
    */
@@ -32,7 +32,7 @@ public enum ErrorCode  implements Iterable<String>, Comparator<ErrorCode> {
   /**
    * 30 Format error, message format received not conform to specification
    */
-  format(30, "Format error", "Format error, message format received not conform to specification", HttpStatus.INTERNAL_SERVER_ERROR),
+  format(30, "Format error", "Format error, message format received not conform to specification", HttpStatus.BAD_REQUEST),
   /**
    * 401 authentication
    */
@@ -44,11 +44,11 @@ public enum ErrorCode  implements Iterable<String>, Comparator<ErrorCode> {
   /**
    * 409 not found see {@link org.springframework.http.HttpStatus}
    */
-  conflict(409, "Conflict", "The request could not be completed due to a conflict with the current state of the target resource", HttpStatus.INTERNAL_SERVER_ERROR),
+  conflict(409, "Conflict", "The request could not be completed due to a conflict with the current state of the target resource", HttpStatus.CONFLICT),
   /**
    * 50 duplicate
    */
-  dup(50, "duplicate", "", HttpStatus.INTERNAL_SERVER_ERROR),
+  dup(50, "duplicate", "", HttpStatus.EXPECTATION_FAILED),
   
   /**
    * 10000
