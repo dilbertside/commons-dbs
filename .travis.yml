@@ -1,0 +1,11 @@
+dist: focal
+language: java
+jdk:
+  - oraclejdk11
+  - openjdk11
+env: MVN_VERSION='3.6.3'
+branches:
+  except:
+    - /^test.*/i
+
+install: 'mvn'

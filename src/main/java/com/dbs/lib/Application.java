@@ -5,7 +5,10 @@ package com.dbs.lib;
 
 import java.lang.invoke.MethodHandles;
 import java.net.UnknownHostException;
+import java.time.ZoneId;
+import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.springframework.boot.web.support.SpringBootServletInitializer;
@@ -32,6 +35,7 @@ public class Application /*extends SpringBootServletInitializer*/ {
   protected static void showAppInfo(final Environment env) throws UnknownHostException {
     String isSslEnabled = env.getProperty("server.ssl.enabled");
     String protocol = "http";
+    Properties properties = System.getProperties();
     if (isSslEnabled != null && "true".equalsIgnoreCase(isSslEnabled)) {
       protocol = "https";
     }
@@ -39,19 +43,31 @@ public class Application /*extends SpringBootServletInitializer*/ {
       "Access URLs:\n----------------------------------------------------------\n\t" 
       + "Local: \t\t" + protocol + "://127.0.0.1:{}\n\t"
       + "External: \t" + protocol + "://{}:{}\n\t" 
-      + "Memory Total/Free: {}/{}, processors: {}\n\t"
+      + "Memory Total/Free/Max: {}/{}/{}, processors: {}\n\t"
       + "webapp: {} ({}), environment: {}, V{}"
+      + "\n\tOS Architecture: {}, Name: {}, Version: {}, TZ: {}, Temp Dir: {}"
+      + "\n\tJava Vendor: {} Java Version: {}"
+      + "\n\tJava Home: {}"
       + "\n----------------------------------------------------------", new Object[]{
         env.getProperty("server.port"), 
-        NetUtils.getHostAddress(), 
+        NetUtils.getLocalHostAddress(), 
         env.getProperty("server.port"), 
         Utils.humanReadableByteCount(Runtime.getRuntime().totalMemory(), false),
         Utils.humanReadableByteCount(Runtime.getRuntime().freeMemory(), false),
+        Utils.humanReadableByteCount(Runtime.getRuntime().maxMemory(), false),
         Runtime.getRuntime().availableProcessors(),
         env.getProperty("spring.application.name"), 
         env.getProperty("info.description", "no description"), 
         env.getProperty("info.stage", "unknown"), 
-        env.getProperty("info.version", "add your version in application.properties info.version")
+        env.getProperty("info.version", "add your version in application.properties info.version"),
+        properties.get("os.arch"),
+        properties.get("os.name"),
+        properties.get("os.version"),
+        ZoneId.systemDefault().toString(),
+        FileUtils.getTempDirectoryPath(),
+        properties.get("java.vendor"),
+        properties.get("java.version"),
+        properties.get("java.home")
       });
   }
 }

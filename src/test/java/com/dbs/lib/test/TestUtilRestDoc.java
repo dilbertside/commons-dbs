@@ -131,12 +131,8 @@ public class TestUtilRestDoc {
     
     ConstraintDescriptions simpleRequestConstraints = new ConstraintDescriptions(SimpleRequest.class);
     simpleRequestFields = new FieldDescriptor[] {
-        fieldWithPath("value").type(JsonFieldType.STRING).description("value")
-          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(simpleRequestConstraints.descriptionsForProperty("value")))),
-        fieldWithPath("from").type(JsonFieldType.VARIES).description("date from")
-          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(simpleRequestConstraints.descriptionsForProperty("from")))),
-        fieldWithPath("to").type(JsonFieldType.VARIES).description("date to").optional()
-          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(simpleRequestConstraints.descriptionsForProperty("to")))),
+        fieldWithPath("data").type(JsonFieldType.VARIES).description("data request").optional()
+          .attributes(key("constraints").value(Joiner.on(", ").skipNulls().join(simpleRequestConstraints.descriptionsForProperty("data")))),
       };
     ConstraintDescriptions userDtoConstraints = new ConstraintDescriptions(UserDto.class);
     

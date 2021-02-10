@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
@@ -91,7 +92,7 @@ public class NetUtils {
    * @return Host Address
    */
   @Nullable
-  public static String getHostAddress() {
+  public static String getLocalHostAddress() {
     String result = null;
     Enumeration<NetworkInterface> interfaces = null;
     try {
@@ -143,15 +144,62 @@ public class NetUtils {
   }
 
   /**
-   * get a 
+   * get an  address from an HTTP request 
    * @param request {@link HttpServletRequest}
    * @return ipAddress
    */
   public static String getHttpRequestRemoteHostAddress(HttpServletRequest request) {
-    String ipAddress = ObjectUtils.firstNonNull(request.getHeader(HttpHeaders.X_FORWARDED_FOR), request.getHeader(HttpHeaders.X_FORWARDED_HOST));  
-    if (ipAddress == null) {  
-      ipAddress = request.getRemoteAddr();  
-    }
+    String ipAddress = ObjectUtils.firstNonNull(
+    		request.getHeader(HttpHeaders.X_FORWARDED_FOR), 
+    		request.getHeader(HttpHeaders.X_FORWARDED_HOST),
+    		request.getRemoteAddr(),
+    		request.getServerName());  
     return ipAddress;
   }
+  
+  /**
+   * get an address from HTTP headers
+   * @param httpHeaders
+   * @return ipAddress
+   */
+  public static String getHttpRequestRemoteHostAddress(org.springframework.http.HttpHeaders httpHeaders) {
+  	InetSocketAddress host = httpHeaders.getHost();
+  	String ipAddress = host.getHostName();
+  	if(host.isUnresolved()) {
+  		InetSocketAddress ip = new InetSocketAddress(host.getHostName(), host.getPort());
+  		ipAddress = ip.getAddress() != null ? ip.getAddress().getHostAddress() : ip.getHostName();
+  	}
+  	if (httpHeaders.containsKey(HttpHeaders.X_FORWARDED_FOR)) {
+  		String ip = httpHeaders.get(HttpHeaders.X_FORWARDED_FOR).get(0);
+  		ipAddress = resolveIp(ip);
+  	}
+  	if (httpHeaders.containsKey(HttpHeaders.X_FORWARDED_HOST)) {
+  		String ip = httpHeaders.get(HttpHeaders.X_FORWARDED_HOST).get(0);
+  		ipAddress = resolveIp(ip);
+  	}
+    return ipAddress;
+  }
+  
+  private static String resolveIp(String ip) {
+  	String value = ip;
+  	String host = null;
+		int port = 0;
+		int separator = (value.startsWith("[") ? value.indexOf(':', value.indexOf(']')) : value.lastIndexOf(':'));
+		if (separator != -1) {
+			host = value.substring(0, separator);
+			String portString = value.substring(separator + 1);
+			try {
+				port = Integer.parseInt(portString);
+			}
+			catch (NumberFormatException ex) {
+				// ignore
+			}
+		}
+		if (host == null) {
+			host = value;
+		}
+		InetSocketAddress isa = new InetSocketAddress(host, port);
+		String ipAddress = isa.getAddress() != null ? isa.getAddress().getHostAddress() : isa.getHostName();
+		return ipAddress;
+	}
 }

@@ -4,14 +4,14 @@
   <parent>
     <groupId>com.github.dilbertside</groupId>
     <artifactId>bom</artifactId>
-    <version>5.1.28</version>
+    <version>5.2.2</version>
     <relativePath />
   </parent>
   <artifactId>commons-dbs</artifactId>
-  <version>1.0.11</version>
+  <version>1.1.1</version>
   <packaging>jar</packaging>
   <name>commons-dbs-library</name>
-  <description>Miscellaneous utilities, functions used oten in projects based on Spring Framework and Spring Boot</description>
+  <description>Miscellaneous utilities, functions used often in projects based on Spring Framework and Spring Boot</description>
   <url>https://github.com/dilbertside/commons-dbs</url>
   <licenses>
     <license>
@@ -23,9 +23,7 @@
   <scm>
     <url>https://github.com/dilbertside/commons-dbs.git</url>
   </scm>
-  <properties>
-    <java.version>1.8</java.version>
-  </properties>
+  <properties />
   <dependencies>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
