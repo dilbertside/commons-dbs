@@ -6,7 +6,7 @@ package com.dbs.lib.spreadsheet;
 /**
  * https://codereview.stackexchange.com/questions/44545/excel-column-string-to-row-number-and-vice-versa
  * 
- * @author lch at 4 Jan 2020 14:41:28
+ * @author dbs at 4 Jan 2020 14:41:28
  * @since 1.0.0
  * @version 1.0
  */

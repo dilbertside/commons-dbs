@@ -4,7 +4,7 @@
 package com.dbs.lib.graphic;
 
 /**
- * @author lch at 14 Jan 2021 23:59:32
+ * @author dbs at 14 Jan 2021 23:59:32
  * @since 1.0.0
  * @version 1.0
  */

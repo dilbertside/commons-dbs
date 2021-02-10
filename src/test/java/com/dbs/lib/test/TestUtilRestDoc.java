@@ -27,7 +27,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.base.Joiner;
 
 /**
- * @author lch on Mar 5, 2018 5:00:32 PM
+ * @author dbs on Mar 5, 2018 5:00:32 PM
  * @since 0.3.6
  * @version 1.0
  *

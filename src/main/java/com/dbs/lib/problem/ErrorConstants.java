@@ -6,7 +6,7 @@ import java.net.URI;
  * used with Problem Spring Web a library that makes it easy to produce application/problem+json responses from a Spring application.
  * <br> cf github.com/zalando/problem
  * 
- * @author lch on Nov 15, 2017 9:38:20 AM
+ * @author dbs on Nov 15, 2017 9:38:20 AM
  * @since 1.0.0
  * @version 1.0
  *
