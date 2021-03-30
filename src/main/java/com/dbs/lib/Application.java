@@ -44,7 +44,7 @@ public class Application /*extends SpringBootServletInitializer*/ {
       + "Local: \t\t" + protocol + "://127.0.0.1:{}\n\t"
       + "External: \t" + protocol + "://{}:{}\n\t" 
       + "Memory Total/Free/Max: {}/{}/{}, processors: {}\n\t"
-      + "webapp: {} ({}), environment: {}, V{}"
+      + "webapp: {} ({}), environment: {}, V{}, build date {}"
       + "\n\tOS Architecture: {}, Name: {}, Version: {}, TZ: {}, Temp Dir: {}"
       + "\n\tJava Vendor: {} Java Version: {}"
       + "\n\tJava Home: {}"
@@ -59,7 +59,8 @@ public class Application /*extends SpringBootServletInitializer*/ {
         env.getProperty("spring.application.name"), 
         env.getProperty("info.description", "no description"), 
         env.getProperty("info.stage", "unknown"), 
-        env.getProperty("info.version", "add your version in application.properties info.version"),
+        env.getProperty("info.version", "add your version in application.properties info.version=${project.version}"),
+        env.getProperty("info.buildDate", "add your build date in application.properties info.buildDate=${maven.build.timestamp}"),
         properties.get("os.arch"),
         properties.get("os.name"),
         properties.get("os.version"),
