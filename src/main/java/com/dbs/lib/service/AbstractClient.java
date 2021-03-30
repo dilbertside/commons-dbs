@@ -3,6 +3,8 @@
  */
 package com.dbs.lib.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.NoRouteToHostException;
 import java.net.URI;
@@ -19,8 +21,10 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.ResolvableType;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +34,10 @@ import org.springframework.http.client.HttpComponentsAsyncClientHttpRequestFacto
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.http.client.support.BasicAuthorizationInterceptor;
+import org.springframework.http.converter.GenericHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.json.MappingJacksonInputMessage;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -343,6 +351,52 @@ public class AbstractClient {
     return msg;
   }
 
+  /**
+   * 
+   * @param e
+   * @return
+   */
+  @SuppressWarnings("rawtypes")
+	protected SimpleResponse extractException(Exception e) {
+  	SimpleResponse<?> resp = null;
+  	if ( e instanceof org.springframework.web.client.HttpClientErrorException) {
+  		try {
+  			resp = extractData(SimpleResponse.class, (HttpClientErrorException) e);
+  		} catch (HttpMessageNotReadableException | IOException e1) {
+  			log.error("failed to extract exception payload", e1);
+  			resp = new SimpleResponse<>(ErrorCode.getByHttpStatus(((HttpClientErrorException)e).getStatusCode()),
+  					((HttpClientErrorException)e).getResponseBodyAsString());
+  		}
+  	} 
+  	if (null == resp)
+  		resp = new SimpleResponse<>(ErrorCode.internalError, handleException(e));
+		return resp;
+	}
+
+  /**
+   * reuse message converters from {@link #restTemplate} to extract payload from {@link HttpClientErrorException}
+   * @param <T>
+   * @param clazz a context class for the target type
+   * @param exc {@link HttpClientErrorException}
+   * @return the converted object
+   * @throws HttpMessageNotReadableException
+   * @throws IOException
+   */
+	@SuppressWarnings("unchecked")
+	protected <T> T extractData(Class<T> clazz, HttpClientErrorException exc) throws HttpMessageNotReadableException, IOException {
+  	MediaType contentType = exc.getResponseHeaders().getContentType();
+  	HttpInputMessage responseWrapper = new MappingJacksonInputMessage(new ByteArrayInputStream(exc.getResponseBodyAsByteArray()), exc.getResponseHeaders());
+  	for (HttpMessageConverter<?> messageConverter : restTemplate.getMessageConverters()) {
+  		if (messageConverter instanceof GenericHttpMessageConverter) {
+  			GenericHttpMessageConverter<?> genericMessageConverter = (GenericHttpMessageConverter<?>) messageConverter;
+  			if (genericMessageConverter.canRead(clazz, null, contentType)) {
+  				log.debug("Reading to [{}]", ResolvableType.forType(clazz));
+  				return (T) genericMessageConverter.read(clazz, null, responseWrapper);
+  			}
+  		}
+		}
+		return null;
+	}
   /**
    * 
    * @return root URI
