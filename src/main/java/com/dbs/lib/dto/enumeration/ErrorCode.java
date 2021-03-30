@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @author dbs 
  * @since 1.0.0
  * @version 1.0
+ * @version 1.1 add {@link #getByHttpStatus()}
  *
  *     does not overlap with {@link org.springframework.http.HttpStatus}<br>
  */
@@ -139,6 +140,20 @@ public enum ErrorCode  implements Iterable<String>, Comparator<ErrorCode> {
   public static ErrorCode find(int code) {
     for (ErrorCode e : ErrorCode.values()) {
       if (e.getCode() == code) {
+        return e;
+      }
+    }
+    return none;
+  }
+  
+  /**
+   * get an {@link ErrorCode} from a {@link HttpStatus} code
+   * @param status {@link HttpStatus}
+   * @return {@link ErrorCode}
+   */
+  public static ErrorCode getByHttpStatus(HttpStatus status) {
+    for (ErrorCode e : ErrorCode.values()) {
+      if (e.getHttpStatus() == status) {
         return e;
       }
     }
