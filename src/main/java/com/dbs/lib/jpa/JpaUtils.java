@@ -19,6 +19,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,19 +44,26 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.EntityType;
+import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.PropertyAccessor;
 import org.springframework.beans.PropertyAccessorFactory;
+import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.jdbc.support.MetaDataAccessException;
 import org.springframework.lang.Nullable;
+import org.springframework.orm.jpa.vendor.Database;
 
 
 /**
  * Utility class for dealing with JPA API
  * 
  * @author Jose Luis Martin
+ * @author dbs
  * @since 1.1
+ * @version 1.2 add util method {@link #determineDatabase(DataSource)}
  */
+@lombok.extern.slf4j.Slf4j
 public abstract class JpaUtils {
 	
 	private static String ALIAS_PATTERN_STRING = "(?<=from)\\s+(?:\\S+)\\s+(?:as\\s+)*(\\w*)";
@@ -472,5 +481,32 @@ public abstract class JpaUtils {
 		}
 		
 		return "".equals(mappedBy) ? null : mappedBy;
+	}
+
+	/**
+	 * Return the most suitable {@link Database} for the given {@link DataSource}.
+	 * 
+	 * @apiNote to test with more DB than h2 and postgresql
+	 * @param dataSource the source {@link DataSource}
+	 * @return the most suitable {@link Database} name string
+	 * @throws SQLException 
+	 */
+	public static String determineDatabase(DataSource dataSource) throws SQLException {
+		if (dataSource == null) {
+			return Database.DEFAULT.name();
+		}
+		String url = null;
+		try {// try first with driver
+			url = JdbcUtils.extractDatabaseMetaData(dataSource, DatabaseMetaData::getURL);
+		} catch (MetaDataAccessException ex) {
+			log.warn("Unable to determine jdbc url from datasource", ex);
+			url = dataSource.getConnection().getMetaData().getURL();
+		}
+		String driver = StringUtils.split(url, ':')[1];
+		Database database = Database.valueOf(driver.toUpperCase());
+		if (database != null) {
+			return database.name();
+		}
+		return Database.DEFAULT.name();
 	}
 }

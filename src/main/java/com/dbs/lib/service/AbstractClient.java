@@ -352,9 +352,9 @@ public class AbstractClient {
   }
 
   /**
-   * 
-   * @param e
-   * @return
+   * Build a simple response from an {@link Exception}
+   * @param e {@link Exception}
+   * @return {@link SimpleResponse}
    */
   @SuppressWarnings("rawtypes")
 	protected SimpleResponse extractException(Exception e) {
@@ -373,6 +373,19 @@ public class AbstractClient {
 		return resp;
 	}
 
+  /**
+   * Build a simple response from an {@link Exception}
+   * @apiNote unstable, not ready
+   * @param clazz destination
+   * @param e {@link Exception}
+   * @return {@link SimpleResponse}
+   */
+  @SuppressWarnings("rawtypes")
+	protected SimpleResponse extractException(Class clazz, Exception e) {
+		return extractException(e);
+	}
+
+  
   /**
    * reuse message converters from {@link #restTemplate} to extract payload from {@link HttpClientErrorException}
    * @param <T>

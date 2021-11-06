@@ -4,11 +4,11 @@
   <parent>
     <groupId>com.github.dilbertside</groupId>
     <artifactId>bom</artifactId>
-    <version>5.2.2</version>
+    <version>5.2.3</version>
     <relativePath />
   </parent>
   <artifactId>commons-dbs</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.2</version>
   <packaging>jar</packaging>
   <name>commons-dbs-library</name>
   <description>Miscellaneous utilities, functions used often in projects based on Spring Framework and Spring Boot</description>
@@ -42,6 +42,7 @@
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
+
     <dependency>
       <groupId>com.github.dilbertside</groupId>
       <artifactId>bom</artifactId>
@@ -60,6 +61,11 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.querydsl</groupId>
@@ -82,6 +88,7 @@
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
@@ -148,6 +155,12 @@
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
+      <artifactId>spring-orm</artifactId>
+      <optional>true</optional>
+
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
     </dependency>
     <dependency>
@@ -170,6 +183,12 @@
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-core</artifactId>
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.xhtmlrenderer</groupId>
+      <artifactId>flying-saucer-pdf-openpdf</artifactId>
+      <optional>true</optional>
+
     </dependency>
     <dependency>
       <groupId>org.zalando</groupId>
