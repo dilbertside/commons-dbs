@@ -22,9 +22,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Locale.LanguageRange;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -523,6 +527,18 @@ public class Utils {
   }
   
   /**
+   * compute VAT for a price
+   * @param price price without VAT
+   * @param vat in 0 < vat < 1 or 20% /100
+   * @return price with VAT
+   */
+  public static BigDecimal computeTax1(BigDecimal price, Float vat) {
+  	Objects.requireNonNull(price, "price cannot be null for conversion");
+  	Objects.requireNonNull(vat, "VAT cannot be null for conversion");
+    return price.add(price.multiply(BigDecimal.valueOf(vat))).round(new MathContext(mathContextPrecision, RoundingMode.HALF_UP));
+  }
+  
+  /**
    * 
    * @param bytes ie Runtime.getRuntime().totalMemory()
    * @param si true for SI units, false for binary units
@@ -573,5 +589,25 @@ public class Utils {
   public static <T> CompletableFuture<List<T>> sequence(List<CompletableFuture<T>> list) {
     return CompletableFuture.allOf(list.toArray(new CompletableFuture<?>[list.size()]))
         .thenApply(v -> list.stream().map(CompletableFuture::join).collect(Collectors.toList()));
+  }
+  
+  /**
+   * Convert Kilocalorie (th) to Kilojoule 
+   * @param <T> Number
+   * @param kcal to convert
+   * @return value in Kilojoule
+   */
+  public static <T extends Number> Double convertKcal2kJoule(@Nonnull T kcal){
+		return Double.valueOf(kcal.doubleValue() * 4.184);
+  }
+  
+  /**
+   * Convert Kilojoule to Kilocalorie (th)
+   * @param <T> Number
+   * @param kj to convert
+   * @return value in Kilocalorie
+   */
+  public static <T extends Number> Double convertkJoule2Kcal(@Nonnull T kj){
+		return Double.valueOf(kj.doubleValue() * 0.2390057361);
   }
 }
